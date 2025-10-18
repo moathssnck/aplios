@@ -1,113 +1,361 @@
-import Image from 'next/image';
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
+  Instagram,
+  Twitter,
+  Linkedin,
+  Mail,
+  Shield,
+  Lock,
+  FileText,
+  Sparkles,
+} from "lucide-react";
+
+export function BioLinks() {
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [securityOpen, setSecurityOpen] = useState(false);
+
+  const links = [
+    {
+      icon: Instagram,
+      label: "الدفع السريع",
+      href: "#",
+      gradient: "from-pink-500 to-purple-500",
+    },
+    {
+      icon: Twitter,
+      label: "دفع الفواتير",
+      href: "#",
+      gradient: "from-blue-400 to-cyan-500",
+    },
+    {
+      icon: Linkedin,
+      label: "شحن باقات رصيد",
+      href: "#",
+      gradient: "from-blue-600 to-blue-400",
+    },
+    {
+      icon: Mail,
+      label: "الخدمات والعروض",
+      href: "mailto:contact@zimsapp",
+      gradient: "from-primary to-chart-2",
+    },
+  ];
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div
+      className="min-h-screen bg-background py-12 px-4 relative overflow-hidden"
+      dir="rtl"
+    >
+      <div className="absolute inset-0 gradient-radial pointer-events-none" />
+      <div className="absolute top-20 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-float" />
+      <div
+        className="absolute bottom-20 right-1/4 w-80 h-80 bg-chart-2/10 rounded-full blur-3xl animate-float"
+        style={{ animationDelay: "1.5s" }}
+      />
+
+      <div className="max-w-md mx-auto relative z-10">
+        <div className="text-center mb-10 animate-fade-in">
+          <div className="relative w-28 h-28 mx-auto mb-6">
+            <div className="absolute inset-0 gradient-teal rounded-full blur-xl opacity-60 animate-pulse" />
+            <div className="relative w-28 h-28 rounded-full gradient-teal flex items-center justify-center glow-effect">
+              <Sparkles className="w-12 h-12 text-primary-foreground" />
+            </div>
+          </div>
+          <h1 className="text-4xl font-bold text-foreground mb-3 text-glow">
+            أحمد محمد
+          </h1>
+          <p className="text-muted-foreground text-xl">مطور ويب ومصمم رقمي</p>
         </div>
+
+        <Card className="glass-effect p-6 mb-8 animate-slide-up border-primary/20">
+          <p className="text-card-foreground leading-relaxed text-center text-lg">
+            مرحباً بكم في صفحتي الشخصية. أنا متخصص في تطوير تطبيقات الويب
+            الحديثة وتصميم تجارب المستخدم المبتكرة. أسعى دائماً لتقديم حلول
+            رقمية متميزة تجمع بين الجمال والوظائف العملية.
+          </p>
+        </Card>
+
+        <div className="space-y-4 mb-10">
+          {links.map((link, index) => {
+            const Icon = link.icon;
+            return (
+              <a
+                key={index}
+                href={link.href}
+                className="block w-full glass-effect rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] hover:glow-effect group animate-scale-in border-primary/30"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="flex items-center justify-center gap-4">
+                  <div
+                    className={`w-10 h-10 rounded-lg bg-gradient-to-br ${link.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
+                  >
+                    <Icon className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="text-card-foreground font-semibold text-lg">
+                    {link.label}
+                  </span>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground mb-6">
+          <button
+            onClick={() => setPrivacyOpen(true)}
+            className="flex items-center gap-2 hover:text-primary transition-all duration-300 hover:scale-105"
+          >
+            <FileText className="w-4 h-4" />
+            <span>سياسة الخصوصية</span>
+          </button>
+          <span className="text-border">•</span>
+          <button
+            onClick={() => setSecurityOpen(true)}
+            className="flex items-center gap-2 hover:text-primary transition-all duration-300 hover:scale-105"
+          >
+            <Shield className="w-4 h-4" />
+            <span>الأمان والحماية</span>
+          </button>
+        </div>
+
+        <p className="text-center text-muted-foreground text-sm">
+          © 2025 جميع الحقوق محفوظة
+        </p>
       </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
+      {/* Privacy Policy Dialog */}
+      <Dialog open={privacyOpen} onOpenChange={setPrivacyOpen}>
+        <DialogContent
+          className="max-w-2xl max-h-[80vh] overflow-y-auto glass-effect border-primary/30"
+          dir="rtl"
         >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+          <DialogHeader>
+            <DialogTitle className="text-2xl flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-chart-2 flex items-center justify-center">
+                <FileText className="w-5 h-5 text-primary-foreground" />
+              </div>
+              سياسة الخصوصية
+            </DialogTitle>
+            <DialogDescription className="text-right text-base">
+              آخر تحديث: 17 أكتوبر 2025
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-6 text-right leading-relaxed">
+            <section>
+              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-primary" />
+                1. جمع المعلومات
+              </h3>
+              <p className="text-muted-foreground text-base">
+                نحن نجمع المعلومات التي تقدمها لنا مباشرة عند استخدام خدماتنا،
+                بما في ذلك الاسم وعنوان البريد الإلكتروني ومعلومات الاتصال
+                الأخرى. كما نجمع معلومات تلقائياً حول استخدامك للموقع من خلال
+                ملفات تعريف الارتباط وتقنيات التتبع المماثلة.
+              </p>
+            </section>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+            <section>
+              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-primary" />
+                2. استخدام المعلومات
+              </h3>
+              <p className="text-muted-foreground text-base">
+                نستخدم المعلومات التي نجمعها لتوفير وتحسين خدماتنا، والتواصل
+                معك، وتخصيص تجربتك، وحماية أمن الموقع. لن نشارك معلوماتك الشخصية
+                مع أطراف ثالثة دون موافقتك الصريحة، باستثناء ما يقتضيه القانون.
+              </p>
+            </section>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
+            <section>
+              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-primary" />
+                3. حماية البيانات
+              </h3>
+              <p className="text-muted-foreground text-base">
+                نتخذ تدابير أمنية معقولة لحماية معلوماتك الشخصية من الوصول غير
+                المصرح به أو الاستخدام أو الكشف. نستخدم التشفير وبروتوكولات
+                الأمان الصناعية القياسية لحماية بياناتك.
+              </p>
+            </section>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
+            <section>
+              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-primary" />
+                4. حقوقك
+              </h3>
+              <p className="text-muted-foreground text-base">
+                لديك الحق في الوصول إلى معلوماتك الشخصية وتصحيحها أو حذفها.
+                يمكنك أيضاً الاعتراض على معالجة بياناتك أو طلب تقييد المعالجة.
+                للممارسة هذه الحقوق، يرجى الاتصال بنا عبر البريد الإلكتروني.
+              </p>
+            </section>
+
+            <section>
+              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-primary" />
+                5. ملفات تعريف الارتباط
+              </h3>
+              <p className="text-muted-foreground text-base">
+                نستخدم ملفات تعريف الارتباط لتحسين تجربتك على موقعنا. يمكنك
+                التحكم في استخدام ملفات تعريف الارتباط من خلال إعدادات المتصفح
+                الخاص بك. لمزيد من المعلومات، يرجى الاطلاع على سياسة ملفات تعريف
+                الارتباط الخاصة بنا.
+              </p>
+            </section>
+
+            <section>
+              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-primary" />
+                6. التغييرات على السياسة
+              </h3>
+              <p className="text-muted-foreground text-base">
+                قد نقوم بتحديث سياسة الخصوصية هذه من وقت لآخر. سنخطرك بأي
+                تغييرات جوهرية عن طريق نشر السياسة الجديدة على هذه الصفحة وتحديث
+                تاريخ "آخر تحديث" أعلاه.
+              </p>
+            </section>
+          </div>
+          <div className="flex justify-end mt-6">
+            <Button
+              onClick={() => setPrivacyOpen(false)}
+              className="gradient-teal text-primary-foreground hover:opacity-90"
+            >
+              إغلاق
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Security Dialog */}
+      <Dialog open={securityOpen} onOpenChange={setSecurityOpen}>
+        <DialogContent
+          className="max-w-2xl max-h-[80vh] overflow-y-auto glass-effect border-primary/30"
+          dir="rtl"
         >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+          <DialogHeader>
+            <DialogTitle className="text-2xl flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-chart-2 flex items-center justify-center">
+                <Shield className="w-5 h-5 text-primary-foreground" />
+              </div>
+              الأمان والحماية
+            </DialogTitle>
+            <DialogDescription className="text-right text-base">
+              التزامنا بحماية بياناتك
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-6 text-right leading-relaxed">
+            <section>
+              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
+                <Lock className="w-5 h-5 text-primary" />
+                التشفير والأمان
+              </h3>
+              <p className="text-muted-foreground text-base">
+                نستخدم بروتوكول SSL/TLS لتشفير جميع البيانات المنقولة بين متصفحك
+                وخوادمنا. هذا يضمن أن معلوماتك الشخصية محمية من الاعتراض أثناء
+                النقل. جميع البيانات الحساسة مشفرة أيضاً عند التخزين.
+              </p>
+            </section>
+
+            <section>
+              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-primary" />
+                أدوار الأمان والصلاحيات
+              </h3>
+              <div className="space-y-4">
+                <div className="glass-effect border-primary/20 rounded-xl p-5 hover:border-primary/40 transition-colors">
+                  <h4 className="font-semibold text-foreground mb-2 text-lg">
+                    المستخدم العادي
+                  </h4>
+                  <p className="text-muted-foreground">
+                    الوصول إلى المحتوى العام، عرض الملف الشخصي، والتفاعل مع
+                    الروابط المتاحة.
+                  </p>
+                </div>
+                <div className="glass-effect border-primary/20 rounded-xl p-5 hover:border-primary/40 transition-colors">
+                  <h4 className="font-semibold text-foreground mb-2 text-lg">
+                    المستخدم المسجل
+                  </h4>
+                  <p className="text-muted-foreground">
+                    جميع صلاحيات المستخدم العادي بالإضافة إلى إمكانية حفظ
+                    التفضيلات والوصول إلى المحتوى الحصري.
+                  </p>
+                </div>
+                <div className="glass-effect border-primary/20 rounded-xl p-5 hover:border-primary/40 transition-colors">
+                  <h4 className="font-semibold text-foreground mb-2 text-lg">
+                    المسؤول
+                  </h4>
+                  <p className="text-muted-foreground">
+                    صلاحيات كاملة لإدارة المحتوى، تعديل الإعدادات، ومراقبة نشاط
+                    المستخدمين.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-primary" />
+                الحماية من التهديدات
+              </h3>
+              <ul className="space-y-2 text-muted-foreground text-base">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>
+                    حماية من هجمات DDoS باستخدام شبكة توزيع المحتوى (CDN)
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>
+                    جدار حماية تطبيقات الويب (WAF) لمنع الهجمات الشائعة
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>مراقبة مستمرة للأنشطة المشبوهة والتهديدات الأمنية</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>
+                    نسخ احتياطية منتظمة للبيانات لضمان استمرارية الخدمة
+                  </span>
+                </li>
+              </ul>
+            </section>
+
+            <section>
+              <h3 className="text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-primary" />
+                الإبلاغ عن المشاكل الأمنية
+              </h3>
+              <p className="text-muted-foreground text-base">
+                إذا اكتشفت ثغرة أمنية أو مشكلة في موقعنا، يرجى الاتصال بنا فوراً
+                على security@zimsapp. نحن نقدر جهود الباحثين الأمنيين ونلتزم
+                بالرد السريع على جميع التقارير.
+              </p>
+            </section>
+          </div>
+          <div className="flex justify-end mt-6">
+            <Button
+              onClick={() => setSecurityOpen(false)}
+              className="gradient-teal text-primary-foreground hover:opacity-90"
+            >
+              إغلاق
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }
