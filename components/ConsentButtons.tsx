@@ -3,6 +3,7 @@
 
 import { grantAll, denyAll } from "@/lib/consent";
 import { loadAnalytics } from "@/lib/analytics";
+import { Button } from "./ui/button";
 
 export default function ConsentButtons() {
   const onAccept = async () => {
@@ -24,8 +25,12 @@ export default function ConsentButtons() {
 
   return (
     <div>
-      <button onClick={onAccept}>Accept</button>
-      <button onClick={onDeny}>Deny</button>
+      <Button className="bg-blue-500 mx-1" onClick={onAccept}>
+        موافقة
+      </Button>
+      <Button className="bg-red-500" onClick={onDeny}>
+        رفض
+      </Button>
     </div>
   );
 }
