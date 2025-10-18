@@ -1,75 +1,64 @@
+// components/CookieConsent.tsx
 "use client";
 
-import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Cookie, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { grantAll, denyAll } from "@/lib/consent";
+
+const STORAGE_KEY = "cookie_consent_v2"; // your key
+
+type ConsentChoice = "granted" | "denied" | "unset";
 
 export function CookieConsent() {
-  const [showConsent, setShowConsent] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [choice, setChoice] = useState<ConsentChoice>("unset");
 
   useEffect(() => {
-    const consent = localStorage.getItem("cookieConsent");
-    if (!consent) {
-      setShowConsent(true);
-    }
+    const saved =
+      (localStorage.getItem(STORAGE_KEY) as ConsentChoice | null) || "unset";
+    setChoice(saved);
+    if (saved === "granted") grantAll();
+    if (saved === "denied") denyAll();
+    if (saved === "unset") setOpen(true);
   }, []);
 
-  const acceptCookies = () => {
-    localStorage.setItem("cookieConsent", "accepted");
-    setShowConsent(false);
+  const acceptAll = () => {
+    grantAll();
+    localStorage.setItem(STORAGE_KEY, "granted");
+    setChoice("granted");
+    setOpen(false);
   };
 
-  const declineCookies = () => {
-    localStorage.setItem("cookieConsent", "declined");
-    setShowConsent(false);
+  const rejectAll = () => {
+    denyAll();
+    localStorage.setItem(STORAGE_KEY, "denied");
+    setChoice("denied");
+    setOpen(false);
   };
 
-  if (!showConsent) return null;
+  // Optional button to reopen banner from footer/menu
+  // export this or render a small "Privacy settings" somewhere:
+  // <button onClick={()=>setOpen(true)}>إدارة الخصوصية</button>
+
+  if (!open) return null;
 
   return (
-    <div
-      className="fixed bottom-0 left-0 right-0 p-4 z-50 animate-in slide-in-from-bottom-5"
-      dir="rtl"
-    >
-      <Card className="max-w-2xl mx-auto bg-card border-border shadow-lg">
-        <div className="p-6">
-          <div className="flex items-start gap-4">
-            <div className="flex-shrink-0">
-              <Cookie className="w-6 h-6 text-primary" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold text-card-foreground mb-2">
-                نستخدم ملفات تعريف الارتباط
-              </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                نستخدم ملفات تعريف الارتباط (Cookies) لتحسين تجربتك على موقعنا،
-                وتحليل حركة المرور، وتخصيص المحتوى. باستخدامك لهذا الموقع، فإنك
-                توافق على استخدامنا لملفات تعريف الارتباط وفقاً لسياسة الخصوصية
-                الخاصة بنا.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <Button
-                  onClick={acceptCookies}
-                  className="bg-primary text-primary-foreground hover:bg-primary/90"
-                >
-                  قبول جميع ملفات تعريف الارتباط
-                </Button>
-                <Button onClick={declineCookies} variant="outline">
-                  رفض
-                </Button>
-              </div>
-            </div>
-            <button
-              onClick={declineCookies}
-              className="flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="إغلاق"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+    <div className="fixed inset-x-0 bottom-0 z-50">
+      <div className="mx-auto max-w-3xl m-3 rounded-xl p-4 glass-effect border">
+        <p className="text-sm">
+          نستخدم ملفات تعريف الارتباط لتحسين التجربة وقياس الأداء. اختر موافقتك.
+        </p>
+        <div className="mt-3 flex gap-2 justify-end">
+          <button onClick={rejectAll} className="px-3 py-2 rounded-lg border">
+            رفض
+          </button>
+          <button
+            onClick={acceptAll}
+            className="px-3 py-2 rounded-lg bg-primary text-primary-foreground"
+          >
+            موافقة
+          </button>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }

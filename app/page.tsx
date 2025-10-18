@@ -1,6 +1,5 @@
 "use client";
-
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,40 +8,89 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Shield, Lock, FileText, Sparkles, Link } from "lucide-react";
+import {
+  Shield,
+  Lock,
+  FileText,
+  Sparkles,
+  Link as LinkIcon,
+  CreditCard,
+  Wallet,
+  Gift,
+  ShoppingCart,
+  Globe,
+} from "lucide-react";
 import { CookieConsent } from "@/components/cookies";
 import { Avatar } from "@/components/ui/avatar";
+
+import { db } from "@/lib/firebase";
+import {
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  DocumentData,
+} from "firebase/firestore";
+
+type LinkItem = {
+  label: string;
+  href: string;
+  gradient: string;
+  icon?: string;
+};
+
+// خريطة الأيقونات المسموح بها
+const iconMap: Record<string, React.ComponentType<any>> = {
+  Link: LinkIcon,
+  CreditCard,
+  Wallet,
+  Gift,
+  ShoppingCart,
+  Globe,
+  Sparkles,
+};
 
 export default function BioLinks() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [securityOpen, setSecurityOpen] = useState(false);
 
-  const links = [
-    {
-      icon: Link,
-      label: "الدفع السريع",
-      href: "#",
-      gradient: "from-pink-500 to-purple-500",
-    },
-    {
-      icon: Link,
-      label: "دفع الفواتير",
-      href: "#",
-      gradient: "from-pink-600 to-purple-500",
-    },
-    {
-      icon: Link,
-      label: "شحن باقات رصيد",
-      href: "#",
-      gradient: "from-pink-600 to-purple-400",
-    },
-    {
-      icon: Link,
-      label: "الخدمات والعروض",
-      href: "#",
-      gradient: "from-pink-600 to-purple-400",
-    },
-  ];
+  const [links, setLinks] = useState<LinkItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    const q = query(collection(db, "links"));
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        const list: LinkItem[] = [];
+        snap.forEach((doc) => {
+          const data = doc.data() as DocumentData;
+          list.push({
+            label: data.label ?? "",
+            href: data.href ?? "#",
+            gradient: data.gradient ?? "from-pink-500 to-purple-500",
+            icon: data.icon || "Link",
+          });
+        });
+        setLinks(list);
+        setLoading(false);
+      },
+      (error) => {
+        console.error(error);
+        setErr("حصل خطأ أثناء جلب الروابط.");
+        setLoading(false);
+      }
+    );
+
+    return () => unsub();
+  }, []);
+
+  // Placeholders أثناء التحميل
+  const skeletonItems = useMemo(
+    () => new Array(4).fill(0).map((_, i) => i),
+    []
+  );
 
   return (
     <>
@@ -75,29 +123,53 @@ export default function BioLinks() {
             </h1>
           </div>
 
+          {/* روابط قادمة من Firestore */}
           <div className="space-y-4 mb-10">
-            {links.map((link, index) => {
-              const Icon = link.icon;
-              return (
-                <a
-                  key={index}
-                  href={link.href}
-                  className="flex justify-between w-full glass-effect rounded-xl p-3 transition-all duration-300 hover:scale-[1.02] border-2 hover:glow-effect group animate-scale-in border-pink-400/30 hover:shadow-md  hover:shadow-pink-500/50 "
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="flex items-center justify-center gap-4">
-                    <div
-                      className={`w-10 h-10 rounded-lg bg-gradient-to-br ${link.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
-                    >
-                      <Icon className="w-5 h-5 text-white" />
+            {loading && (
+              <>
+                {skeletonItems.map((i) => (
+                  <div
+                    key={`sk-${i}`}
+                    className="w-full h-14 glass-effect rounded-xl p-3 border-2 border-pink-400/20 animate-pulse"
+                  />
+                ))}
+              </>
+            )}
+
+            {!loading && err && (
+              <div className="text-center text-sm text-red-500">{err}</div>
+            )}
+
+            {!loading &&
+              !err &&
+              links.map((link, index) => {
+                const Icon =
+                  link.icon && iconMap[link.icon]
+                    ? iconMap[link.icon]
+                    : LinkIcon;
+
+                return (
+                  <a
+                    key={`${link.label}-${index}`}
+                    href={link.href || "#"}
+                    className="flex justify-between w-full glass-effect rounded-xl p-3 transition-all duration-300 hover:scale-[1.02] border-2 hover:glow-effect group animate-scale-in border-pink-400/30 hover:shadow-md hover:shadow-pink-500/50"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <div className="flex items-center justify-center gap-4">
+                      <div
+                        className={`w-10 h-10 rounded-lg bg-gradient-to-br ${link.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
+                      >
+                        <Icon className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-card-foreground font-semibold text-lg">
+                        {link.label}
+                      </span>
                     </div>
-                    <span className="text-card-foreground font-semibold text-lg">
-                      {link.label}
-                    </span>
-                  </div>
-                </a>
-              );
-            })}
+                  </a>
+                );
+              })}
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground mb-6">
@@ -123,7 +195,7 @@ export default function BioLinks() {
           </p>
         </div>
 
-        {/* Privacy Policy Dialog */}
+        {/* Dialogs كما هي تمامًا */}
         <Dialog open={privacyOpen} onOpenChange={setPrivacyOpen}>
           <DialogContent
             className="max-w-2xl max-h-[80vh] overflow-y-auto glass-effect border-primary/30"
@@ -216,6 +288,7 @@ export default function BioLinks() {
                 </p>
               </section>
             </div>
+
             <div className="flex justify-end mt-6">
               <Button
                 onClick={() => setPrivacyOpen(false)}
@@ -227,7 +300,6 @@ export default function BioLinks() {
           </DialogContent>
         </Dialog>
 
-        {/* Security Dialog */}
         <Dialog open={securityOpen} onOpenChange={setSecurityOpen}>
           <DialogContent
             className="max-w-2xl max-h-[80vh] overflow-y-auto glass-effect border-primary/30"
@@ -350,6 +422,7 @@ export default function BioLinks() {
           </DialogContent>
         </Dialog>
       </div>
+
       <CookieConsent />
     </>
   );
