@@ -5,7 +5,7 @@ import { grantAll, denyAll } from "@/lib/consent";
 import { loadAnalytics } from "@/lib/analytics";
 import { Button } from "./ui/button";
 
-export default function ConsentButtons() {
+export default function ConsentButtons({ setOpen }: any) {
   const onAccept = async () => {
     grantAll();
 
@@ -13,6 +13,7 @@ export default function ConsentButtons() {
     const mod = await import("firebase/analytics");
     const analytics = await loadAnalytics();
     if (analytics) mod.setAnalyticsCollectionEnabled(analytics, true);
+    setOpen(false);
   };
 
   const onDeny = async () => {
@@ -20,6 +21,7 @@ export default function ConsentButtons() {
 
     const mod = await import("firebase/analytics");
     const analytics = await loadAnalytics();
+    setOpen(false);
     if (analytics) mod.setAnalyticsCollectionEnabled(analytics, false);
   };
 

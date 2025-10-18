@@ -53,7 +53,7 @@ export function CookieConsent() {
           الارتباط لتحسين التجربة وقياس الأداء. اختر موافقتك.
         </p>
         <div className="mt-3 flex gap-2 justify-end">
-          <ConsentButtons />
+          <ConsentButtons setOpen={setOpen} />
         </div>
       </div>
     </div>
