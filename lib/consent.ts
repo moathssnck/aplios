@@ -7,8 +7,8 @@ export function updateConsent(mode: {
   ad_user_data: ConsentState;
   ad_personalization: ConsentState;
 }) {
-  if (typeof window === "undefined") return;
-  // window.gtag may not exist yet if script is blocked; guard it.
+  if (typeof window === "undefined") return; // ✅ prevents SSR error
+
   const gtag =
     (window as any).gtag ||
     ((...args: any[]) => {
@@ -20,6 +20,7 @@ export function updateConsent(mode: {
 }
 
 export function grantAll() {
+  if (typeof window === "undefined") return; // ✅ guard again
   updateConsent({
     ad_storage: "granted",
     analytics_storage: "granted",
@@ -29,6 +30,7 @@ export function grantAll() {
 }
 
 export function denyAll() {
+  if (typeof window === "undefined") return;
   updateConsent({
     ad_storage: "denied",
     analytics_storage: "denied",
