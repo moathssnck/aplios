@@ -1,7 +1,6 @@
 // lib/firebase.ts
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAlTDyrStDLFU-4gOisNqI3k5DQe5SVJVE",
@@ -14,6 +13,5 @@ const firebaseConfig = {
   measurementId: "G-B1CQC966C2",
 };
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+export const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 export const db = getFirestore(app);
-export const analytic = getAnalytics(app);

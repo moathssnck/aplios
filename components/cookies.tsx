@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { grantAll, denyAll } from "@/lib/consent";
+import ConsentButtons from "./ConsentButtons";
 
 const STORAGE_KEY = "cookie_consent_v2"; // your key
 
@@ -45,18 +46,14 @@ export function CookieConsent() {
     <div className="fixed inset-x-0 bottom-0 z-50">
       <div className="mx-auto max-w-3xl m-3 rounded-xl p-4 glass-effect border">
         <p className="text-sm">
-          نستخدم ملفات تعريف الارتباط لتحسين التجربة وقياس الأداء. اختر موافقتك.
+          نستخدم ملفات تعريف الارتباط (الكوكيز) لتحسين تجربتك، وتخصيص المحتوى
+          والإعلانات، وتحليل حركة المرور على موقعنا. يمكنك الموافقة على جميع
+          ملفات تعريف الارتباط أو إدارة تفضيلاتك. بالنقر على "أوافق على الكل"،
+          فإنك توافق على استخدام ملفات تعريف الارتباط نستخدم ملفات تعريف
+          الارتباط لتحسين التجربة وقياس الأداء. اختر موافقتك.
         </p>
         <div className="mt-3 flex gap-2 justify-end">
-          <button onClick={rejectAll} className="px-3 py-2 rounded-lg border">
-            رفض
-          </button>
-          <button
-            onClick={acceptAll}
-            className="px-3 py-2 rounded-lg bg-primary text-primary-foreground"
-          >
-            موافقة
-          </button>
+          <ConsentButtons />
         </div>
       </div>
     </div>

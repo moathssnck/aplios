@@ -2,12 +2,13 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
+import FirebaseAnalytics from "@/components/FirebaseAnalytics";
 export const metadata: Metadata = {
   title: "اخر الخدمات واقوى العروض",
   description: "استكشف اخر الخدمات واقوى العروض  ",
 };
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ||"G-B1CQC966C2";
+const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-B1CQC966C2";
 
 export default function RootLayout({
   children,
@@ -52,6 +53,7 @@ export default function RootLayout({
         )}
 
         {children}
+        <FirebaseAnalytics />
       </body>
     </html>
   );
