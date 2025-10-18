@@ -40,7 +40,7 @@ export default function BioLinks() {
       icon: Link,
       label: "الخدمات والعروض",
       href: "#",
-      gradient: "from-purple-600 to-purple-400",
+      gradient: "from-pink-600 to-purple-400",
     },
   ];
 
@@ -82,7 +82,7 @@ export default function BioLinks() {
                 <a
                   key={index}
                   href={link.href}
-                  className="flex justify-between w-full glass-effect rounded-xl p-5 transition-all duration-300 hover:scale-[1.02] border-2 hover:glow-effect group animate-scale-in border-primary/30"
+                  className="flex justify-between w-full glass-effect rounded-xl p-3 transition-all duration-300 hover:scale-[1.02] border-2 hover:glow-effect group animate-scale-in border-pink-400/30 hover:shadow-md  hover:shadow-pink-500/50 "
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className="flex items-center justify-center gap-4">
@@ -111,7 +111,7 @@ export default function BioLinks() {
             <span className="text-border">•</span>
             <button
               onClick={() => setSecurityOpen(true)}
-              className="flex items-center gap-2 hover:text-primary transition-all duration-300 hover:scale-105"
+              className="flex items-center gap-2 hover:text-pink-500 transition-all duration-300 hover:scale-105"
             >
               <Shield className="w-4 h-4" />
               <span>الأمان والحماية</span>
